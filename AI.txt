@@ -6,3 +6,4 @@ Ctrl+1 将画板缩放变为100%
 
 Ctrl+Y 轮廓显示
 Ctrl+Shift+A 取消选择
+
