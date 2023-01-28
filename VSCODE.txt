@@ -1,0 +1,24 @@
+<<VSCODE快捷键>>
+
+alt+shift+A 添加注释
+ctrl+/ 添加CSS注释
+
+ctrl+X 删除当前行
+ctrl+B 隐藏侧边栏
+
+
+ALT+↑↓           快速移动代码行
+ctrl+shift+L 快速选中相同内容
+ctrl+shift+M 弹出问题窗口
+ctrl+shift+space 显示形参提示
+shift+ALT+↑↓ 快速复制代码
+Ctrl+,				设置
+Ctrl+/             单行注释
+Shift+Alt+A		多行注释(块注释)
+Ctrl+L            选中当前一整行
+Ctrl+I            代码提示
+Ctrl+D            下一个匹配的也被选中
+Ctrl+Tab            切换标签窗口
+Ctrl+K Ctrl+T 更换主题
+/**+回车       函数参数注释
+F12               查看函数定义

@@ -1,0 +1,12 @@
+委托
+	STEP01 声明委托
+		public delegate void MyDelegate();//声明一个委托类型，这个委托类型封装了一个方法。
+	
+	STEP02 通过委托类型，创建委托类型的变量
+		MyDelegate myDelegate
+		
+	STEP03 委托的实例
+		myDelegate = new MyDelegate(委托的函数名称) 或 myDelegate = 委托的函数名称
+
+    C#提供了两种系统自带的委托，一个是ACTION（一定指向一个【无返回值void】的方法），另一个是FUNC（一定指向一个【有返回值】的方法）
+		

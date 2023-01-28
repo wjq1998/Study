@@ -1,0 +1,33 @@
+Time.deltaTime
+
+3D模式下，按住鼠标右键，然后点击键盘的W,A,S,D键，以及Q,E可以调整视角
+
+Ctrl+Shift+F 选中相机后，将相机的位置设置为当前场景的位置
+V 顶点吸附功能：选中物体后按住V，然后拖动物体进行顶点吸附
+Ctrl+Shift 吸附功能：选中物体后按住这两个按钮，然后拖动物体进行表面吸附
+
+
+Input.GetAxis("Horizontal") 获得按键的水平值（小数）
+Input.GetAxisRaw("Horizontal") 获得按键的水平值（整数）
+
+[SerializeField] 在private的变量前加上可以让私有的变量在unity面板显示
+[HideInInspector] 隐藏公开的变量
+
+anim.GetCurrentAnimatorStateInfo(0).IsName("动画名") 判断当前是否处于某个动画
+
+GetButton 按住触发多次
+GetButtonDown 按下触发一次
+GetButtonUp 弹起键盘触发一次
+
+InvokeRepeating(函数名称(加双引号写成string类型)，开始几秒后，间隔秒数) 每隔一段时间进行一个函数
+
+Physics2D.OverlapCircle(起始点坐标，半径，检测的图层) 图层圆形检测
+
+using UnityEngine.SceneManagement; 使用场景的命名空间
+
+	SceneManager.LoadScene(SceneManager.GetActiveScene().name); 重新加载unity场景
+	
+触发器判断稍微好点的方式
+	if (collision.gameObject.CompareTag("标签名")) 比直接collision.tag省资源
+	
+一般游戏的角色下落重力是上升重力的两倍

@@ -1,0 +1,461 @@
+3.
+	let
+		1.关键字不能重复声明
+		2.为块级作用域
+		3.不存在变量提升（比如如果用var声明变量的话，就算写在最后，在执行代码时会将其提前）
+		4.不影响作用域链（在一个作用域中定义了一个变量,它子作用域中的函数用到了这个变量,仍会向上级,也就是这个作用域寻找这个变量的值）
+		
+4.
+	！！！记得回头看for跟let的原理
+	
+5.
+	const（常量）
+		1.必须赋初始值
+		2.一般常量用大写（潜规则）
+		3.常量值不能修改
+		4.块级作用域
+		5.对于数组和对象的元素修改，不算做对常量的修改（数组中的内容跟对象中的参数）,因为地址没改
+		
+6.
+	数组的解构
+		const F4=['One','Two','Three','Four'];
+		let [one,two,three,four]=F4;（相当于把上面的字面量赋值给下面的变量）
+	对象的解构
+		const wang={
+			name:'wang';
+            age:'19';
+            jiao:function(){
+                console.log('我很强');
+            }
+		};
+
+        let {name,age,jiao}=wang;
+
+7.
+    1.声明字符串
+        let str=`我是强哥`;(跟直接用单引号和双引号声明字符串效果一样)
+    2.可以直接出现换行符
+    3.变量拼接
+        let lovest='Wang';
+        let out=`${lovest}最帅了`;
+        console.log(out);(输出结果为wang最帅了)
+	4.可以调用函数,会直接返回结果
+		let greet  = `${sayHello()}`
+		
+7.(番外)
+	startWith() 和 endWith()
+		表示字符串的开头或结尾是否是括号内的内容
+		let str = "Hello World"
+		str.startWith('Hello')
+		str.endWith('World')
+		
+	repeat表示将原字符重复n次,并返回一个新的字符
+		'x'.repeat(3)	//'xxx'
+		
+	ES6提供了一种新的数据结构Set.它类似于数组,但成员的值都是唯一的,没有重复的值,创建方法
+		const s= new Set()
+		
+		可以接收一个数组作为参数初始化,如const s = new Set([1,2,3,4,5])
+		
+		可以用size来显示其去除重复项后的长度,如s.size
+		
+		add(value) 添加某个值,然后返回Set结构本身
+		delete(value) 删除某个值,然后返回一个布尔值,表示删除是否成功
+		has(value) 返回一个布尔值,表示该值是否为Set中的一员
+		clear() 清除所有成员,没有返回值
+		
+		可以用forEach来遍历Set
+
+8.
+    ES6允许直接在大括号里，直接写入变量和函数，作为对象的属性和方法，如：
+    let name='wang';
+    let change =function(){
+        console.log('我很强');
+    }
+    const wangjieqiang={
+        name,
+        change,
+        inrove:function(){
+            console('拉拉');
+        }
+    }
+    相当于
+    const wangjieqiang={
+        name:name,
+        change:change,
+        //函数的function也可以省略，比如下面这个函数
+        inrove(){ //方法简写方式
+            console('拉拉');
+        }
+    }
+9.
+    箭头函数：
+        声明：
+        let fn=function(){}--------------let fn=()=>{}
+        
+        1.this是静态的，this始终指向函数声明时所在作用域下this的值，比如：
+        let getName = () => {
+            console.log(this.name);
+        }
+        
+        window.name='Wang';
+
+        const school={
+            name:'Jie'
+        }
+
+        getName.call(school); //得到的值依旧是window中的name“Wang”
+
+        2.不能作为构造函数实例化对象
+
+        3.不能使用arguments保存变量，比如：
+        let fn=()=>{
+            console.log(arguments);
+        }
+
+        fn(1,2,3); //会报错
+
+        4.简写
+            1）省略小括号，当形参有且只有一个的时候
+            //下面这个函数形参n旁边的小括号就可以省略
+            let add=(n)=>{
+                return n;
+            }
+            2)省略花括号，当代码体有且只有一条语句的时候，此时return必须省略,而且语句的执行结果就是返回值，如下：
+            let pow=n=>n*n;
+
+            //箭头函数适合与this无关的回调函数，比如：定时器，数组的方法回调
+            //箭头函数不适合与this相关的回调，事件回调，对象的方法
+
+11.ES6允许给函数赋初始值
+    1.形参初始值，具有默认值的参数，一般位置要靠后（潜规则)，比如：
+        function add(a,b,c=10){}，调用add(1,2)，如果把c=10写在中间，那么2就会赋值给c，那样的话后面的b就没有参数了
+
+    2.与解构赋值相结合，如：
+        有一个对象：
+        {
+            host:'localhost',
+            username:'root',
+            password:'root'
+            port:'3306'
+        }
+
+        函数：function connect(options){
+            let host = options.host
+            lset username = options.username
+        }
+
+        可以简写为
+
+        function connect({host="127.0.0.1",username,password,port}){
+            let host = host
+            lset username = username
+        }
+
+12.ES6引入了rest参数，用于获取函数的实参，用来代替arguments
+    语法：
+    function date(...args){
+        console.log(args);
+    }
+    date('one','two','three'); //与arguments不同是输出结果为数组
+
+    rest参数必须放到参数的最后，比如：
+    function fn(a,b,...args){ //这里的...args只能放小括号的最后，放中间或者前面会报错
+        console.log(a);
+        console.log(b);
+        console.log(args);
+    }
+    fn(1,2,3,4,5,6);
+    //输出结果为 1,2，[3,4,5,6]
+
+13.扩展运算符(...),能将数组转换为逗号分隔的参数序列
+    const wang=['wang','jie','qiang'];
+    function chunwan(){
+        console.log(arguments);
+    }
+    chunwan(...wang);//加上...之前结果为一个数组，加上...后结果为数组中的三个参数
+
+14.扩展函数的应用
+    1.数组的合并
+        const One=[1,11];
+        const Two=[2,22];
+        const Three=[...One,...Two];//结果为Three=[1,11,2,22]
+    2.数组的克隆
+        const One=[1,11];
+        const Two=[...One];//结果为Two数组中的内容跟One一样
+    3.将伪数组转换成为真正的数组
+        const divs=document.querySelectorAll('div');
+        const divArr=[...divs];
+		
+		或使用Array.from(伪数组名),然后用一个变量来接收转换后的数组,也可以用逗号分隔后在后面添加函数来对每个元素进行处理(类似于map)
+
+15.Symbol基本使用
+    ES6引入的新类型，表示独一无二的值，是JS的第七种数据类型，是一种类似于字符串的类型
+    特点： 
+        1）值是唯一的，用来解决命名冲突的问题
+        2）不能与其他数据进行运算
+        3）定义的对象属性不能使用for...in循环遍历，但可以使用Reflect.ownKeys来获取所有的键名
+    
+    创建Symbol
+        let s=Symbol();
+        let s2=Symbol('张三'); //后面的张三只起到解释作用
+        let s3=Symbol('张三');
+        console.log(s2===s3); //结果为false
+        
+        使用Symbol.for创建
+        let s2=Symbol.for('张三'); 
+        let s3=Symbol.for('张三');
+        console.log(s2===s3); //结果为true
+
+        七种数据类型的记忆方法：
+        USONB=>you are so nibility（你好牛逼）
+        U undefin
+        s string，symbol
+        o object
+        n number,null
+        b boolean
+
+16.讲Symbol的，看不懂，记得回来看
+
+17.同上
+
+18.迭代器（Iterator）（记得回来仔细再看一下）
+    1）ES6创造了一种新的遍历命令for...of循环，Iterator接口主要供for...of消费
+    2）原生具备iterator接口的数据有：（差不多就是对象中的一个属性）
+        Array
+        Arguments
+        Set
+        Map
+        String
+        TypedArray
+        NodeList
+    3）
+        1.创建一个指针对象，指向当前数据结构的起始位置
+        2.第一次调用对象的next方法，指针自动指向数据结构的第一个成员
+        3.接下来不断调用next方法，指针一直往后移动，直到指向最后一个成员
+        4.每调用next方法返回一个包含value和done属性的对象
+
+        const One=['one','two','three','four'];
+        for(let v of One){
+            console.log(v);//最终输出结果便会将One中的所有元素遍历一遍
+        }
+
+        //番外：for...in
+        for(let v in One){
+            console.log(v)
+            //返回值为数组的键名，也就是0,1,2,3
+        }
+19.回来看
+
+20.生成器
+    生成器其实就是一个特殊的函数
+    异步编程 纯回调函数node fs ajax mongodb
+    写法：
+        function * gen(){
+            console.log(111);
+            yield "one";
+            console.log(222);
+            yield "two";
+            console.log(333);
+            yield "three";
+        }
+        //上面的yield为代码的分隔符
+
+        let iterator=gen();
+        iterator.next();    //结果为111
+        console.log(iterator.next())    //结果为111以及{value:one,done:false}
+        iterator.next();    //结果为222
+        iterator.next();    //结果为333
+        iterator.next();    //结果为444
+
+        //遍历
+        for(let v of gen()){
+            console.log(v);
+        }
+        //输出每一行代码，但是vield行会输出vield后面的文本内容
+
+22.生成器函数
+    1s后控制台输出111,2s后控制台输出222,3s后控制台输出333
+        回调地狱
+            setTimeout(() => {
+                console.log(111);
+                setTimeout(() => {
+                    console.log(222);
+                    setTimeout(() => {
+                        console.log(333)
+                    }, 3000);
+                }, 2000);
+            }, 1000);
+    
+        用生成器函数
+            function one(){
+                setTimeout(()=>{
+                    console.log(111)
+                    iterator.next();
+                },1000)
+            }
+
+            function two(){
+                setTimeout(()=>{
+                    console.log(222)
+                    iterator.next();
+                },2000)
+            }
+            
+            function three(){
+                setTimeout(()=>{
+                    console.log(333)
+                    iterator.next();
+                },3000)
+            }
+
+            function * gen(){
+                yield one();
+                yield two();
+                yield three();
+            }
+
+            //调用生成器函数
+            let iterator =gen();
+            iterator.next();
+
+24.Promise
+    Promise是ES6引入的异步编程的新解决方案。语法上Promise是一个构造函数，用来封装异步操作并可以获取其成功或失败的结果。
+        1)Promise构造函数：Promise(excutor){}
+        2)Promise.prototype.then方法
+        3)Promise.prototype.catch方法
+
+    实例化Promise对象  
+        const p=new Promise(function(resolve,reject){
+            setTimeout(function(){
+                let data=某个数据
+                resolve(data);  //调用resolve函数后p对象的状态就会变为成功，成功后就可以调用then方法的第一个回调函数
+                let err=读取失败的数据
+                reject(err);    //调用reject函数后p对象的状态就会变为失败，失败后就可以调用then方法的第二个回调函数
+            },1000)
+        })
+
+        p.then(function(value){ //成功的代码
+            console.log(value);
+        },function(reason){ //失败的代码
+            console.log(reason);
+        })
+
+25.
+    Promise封装读取文件
+        const fs = require('fs')
+
+        const p = new Promise(function(resolve , reject){
+            fs.readFile('./src/文章.txt',(err,data)=>{
+                if(err) reject(err)
+                resolve(data)
+            })
+        })
+
+        p.then(function(value){
+            console.log(value)
+        },function(reason){
+            console.log("读取失败")
+        })
+
+26.
+    用Promise封装ajax请求
+
+27.
+    Promise的then方法的返回结果是Promise对象，对象状态由回调函数的结果来决定
+        1.如果回调函数中返回结果是非Promise类型的属性，状态为成功，返回值为对象的成功的值
+
+30.
+    集合
+
+
+33.class类
+    1）class声明类
+    2）constructor定义构造函数初始化
+    3）extends继承父类
+    4）super调用父级构造方法
+    5）static定义静态方法
+    6）父类方法可以重写
+
+34.class静态成员：
+    function Phone(){
+        name='手机';
+        change=function(){
+            console('我可以改变世界');
+        }
+    }
+    上面这个构造函数中的属性和函数，就是静态成员
+
+    class定义静态属性
+    class Phone{
+        static name=手机;//static就是用来定义静态属性的
+    }
+	或者直接Phone.name=手机
+
+40.对象方法扩展
+    Object.assign 对象的合并
+    用法：
+        const One={
+            name:One;
+            age:17;
+        }
+        const Two={
+            name:Two;
+            age:18;
+        }
+        console.log(Object.assign(One,Two));//后面的对象会将前面对象中相同键名的属性值覆盖掉
+
+    Object.setPrototypeOf 设置原型对象
+    用法：
+        const One={
+            name:One;
+            age:17;
+        }
+        const Two={
+            xiaoqu:['one','two'];
+        }
+        object.setPrototypeOf(One,Two);//将后面的对象中的数组加入到One中，并成为原型
+
+41.模块化
+    好处：
+    1）防止命名冲突
+    2）代码复用
+    3）高维护性
+
+42.ES6模块化语法
+    模块功能主要由两个命令构成：export和import
+        export命令你用于规定模块化的对外接口
+        import命令用于输入其他模块提供的功能
+
+43.暴露数据语法汇总
+    1）分别暴露
+        在需要暴露的数据前加上export
+    2）统一暴露
+        在某一行写上export{}，在中括号中写入要暴露的数据名
+    3）默认暴露
+        在export default{}的中括号中写入要暴露的变量以及函数，在引入的时候还要加上default
+    
+44.引入模块数据语法汇总
+    1）通用导入方式
+        import * as 引入名 form "路径";
+    2）结构赋值形式
+        import {要引入的数据名} form "路径";//当数据名有重名时，在数据名的后面加上 as 别名
+        import {default as 别名} form "路径";//针对默认暴露
+    3）简便形式（针对默认暴露）
+        import 别名 form "路径名";
+
+46.并不是所有浏览器都支持ES6新语法，需要将JS代码放到Babel中转换为ES5语法
+
+49.async函数
+    在函数前面加上async后，该函数变为async函数，如：async function fn()
+        返回的结果如果不是一个Promise类型的对象，则返回的结果就是一个成功的Promise对象，如：
+            return 'wang' //返回结果为一个成功(resolve)的值为wang的对象
+
+50.await表达式
+    1.await必须写在async函数中
+    2.await右侧的表达式一般为promise对象
+    3.await返回的是promise成功的值
+    4.await的promise失败了，就会抛出异常，需要通过try.catch捕获处理
+    
+53.ES8对象方法扩展
+    

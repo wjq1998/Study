@@ -1,0 +1,18 @@
+选区 M
+橡皮 E
+画笔 B
+吸管 I（Alt）
+	调整大小 Ctrl
+	橡皮 右键
+油漆桶 G
+渐变 Shift+G
+方形工具 U（再按一次切换是否填充）
+	圆形工具 Shift+U
+
+原地复制 Ctrl+J
+取消选区 Ctrl+D
+
+
+新建图层 Shift+N
+新建组 Alt+Shift+N
+切换显示图层 Tab

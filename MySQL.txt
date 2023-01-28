@@ -1,0 +1,335 @@
+接口跨域的问题
+  解决接口跨域问题的方案有两种: 
+    1.CORS(主流方案,推荐使用)
+    2.JSONP(有缺陷,只支持GET请求)
+
+使用cors中间件解决跨域问题
+  cors是Express的一个第三方中间件.可以方便解决跨域问题,步骤:
+    1.运行 npm i cors 安装
+    2.使用 const cors = require('cors') 导入中间件
+    3.在路由之前调用 app.use(cors()) 配置中间件
+
+什么是CORS
+  CORS (Cross-Origin Resource Sharing，跨域资源共享)由一系列HTTP响应头组成，这些HTTP响应头决定浏览器是否阻止前端JS代码跨域获取资源。
+
+  浏览器的同源安全策略默认会阻止网页“跨域”获取资源。
+  但如果接口服务器配置了CORS相关的HTTP响应头，就可以解除浏览器端的跨域访问限制。
+
+COR注意事项
+  CORS主要在服务器端进行配置。客户端浏览器无须做任何额外的配置，即可请求开启了CORS的接口。
+  CORS在浏览器中有兼容性。只有支持XMLHttpRequest Level2的浏览器，才能正常访问开启了CORS的服务端接口
+  (例如:IE10+、Chrome4+、FireFox3.5+)。
+
+CORS响应头
+  响应头部中可以携带一个Access-Control-Allow-Origin字段，其语法如下:
+    Access-Control-Allow-Origin: <origin> | *
+
+    其中，origin参数的值指定了允许访问该资源的外域URL。
+    例如，下面的字段值将只允许来自http://itcast.cn的请求:
+
+    res.setHeader('Access-Control-Allow-Origin' , 'http://itcast.cn')
+
+    如果指定了Access-Control-Allow-Origin字段的值为通配符*，表示允许来自任何域的请求
+
+    默认情况下,CORS仅支持客户端向服务器发送如下的9个请求头:
+
+    Accept、Accept-Language、Content-Language、DPR、Downlink、Save-Data、Viewport-Width、Width、Content-Type
+    (值仅限于text/plain、multipart/form-data、application/x-www-form-urlencoded 三者之一)
+    
+    如果客户端向服务器发送了额外的请求头信息，则需要在服务器端，通过Access-Control-Allow-Headers对额外的请求头进行声明，否则这次请求会失败!
+
+CORS响应头部 - Access-Control-Allow-Methods
+
+  默认情况下，CORS仅支持客户端发起GET、POST、HEAD请求。
+  如果客户端希望通过PUT、DELETE等方式请求服务器的资源，则需要在服务器端，通过Access-Control-Alow-Methods来指明实际请求所允许使用的HTTP方法。
+
+  代码如下:
+    //只允许 POST,GET,DELETE 方法
+    res.setHeader('Access-Control-Allow-Methods','POST,GET,DELETE')
+    //允许所有http请求方法
+    res.setHeader('Access-Control-Allow-Methods','*')
+
+CORS简单请求
+  同时满足以下两大条件的请求，就属于简单请求:
+    1.请求方式: GET、POST、HEAD三者之一
+    2.HTTP头部信息不超过以下几种字段:无自定义头部字段、Accept、Accept-Language、Content-Language、DPR、
+      Downlink、Save-Data、Viewport-Width、Width 、Content-Type (只有三个值application/x-www-form-
+      urlencoded、multipart/form-data、text/plain)
+
+简单请求和预检请求的区别
+  简单请求的特点:客户端与服务器之间只会发生一次请求。
+  预检请求的特点:客户端与服务器之间会发生两次请求，OPTION预检请求成功之后，才会发起真正的请求。
+
+JSONP的概念与特点
+  概念:浏览器端通过<script>标签的 src属性，请求服务器上的数据，同时，服务器返回一个函数的调用。这种请求数据的方式叫做JSONP。
+
+  特点:
+    JSONP不属于真正的Ajax请求，因为它没有使用XMLHttpRequest这个对象。
+    JSONP仅支持GET请求，不支持POST、PUT、DELETE等请求。
+
+创建JSONP接口的注意事项
+  如果项目中已经配置了CORS跨域资源共享，为了防止冲突，必须在配置CORS中间件之前声明 JSONP 的接口。
+  否则JSONP接口会被处理成开启了CORS的接口。示例代码如下:
+
+实现JSONP接口的步骤
+  1.获取客户端发送过来的回调函数的名字
+  2.得到要通过JSONP形式发送给客户端的数据
+  3.根据前两步得到的数据，拼接出一个函数调用的字符串
+  4.把上一步拼接得到的字符串，响应给客户端的<script>标签进行解析执行
+
+什么是数据库
+  数据库(database)是用来组织、存储和管理数据的仓库。
+
+  当今世界是一个充满着数据的互联网世界，充斥着大量的数据。数据的来源有很多，比如出行记录、消费记录、
+  浏览的网页、发送的消息等等。除了文本类型的数据，图像、音乐、声音都是数据。
+
+  为了方便管理互联网世界中的数据，就有了数据库管理系统的概念(简称:数据库)。用户可以对数据库中的数据进行新增、查询、更新、删除等操作。
+
+常见的数据库及分类
+  市面上的数据库有很多种，最常见的数据库有如下几个:
+
+  MySQL数据库（目前使用最广泛、流行度最高的开源免费数据库;Community + Enterprise)
+  Oracle数据库(收费)
+  SQL Server数据库（收费)
+  Mongodb数据库(Community + Enterprise)
+
+  其中，MySQL、Oracle、SQL Server属于传统型数据库(又叫做:关系型数据库或SQL数据库)，这三者的设计理念相同，用法比较类似。
+
+  而Mongodb属于新型数据库(又叫做:非关系型数据库或NoSQL数据库)，它在一定程度上弥补了传统型数据库的缺陷。
+
+传统型数据库的数据结构
+  在传统型数据库中，数据的组织结构分为数据库(database)、数据表(table)、数据行(row)、字段(field)这4大部分组成。
+
+实际开发中的库,表,行,字段的关系
+  在实际项目开发中，一般情况下，每个项目都对应独立的数据库。
+  不同的数据，要存储到数据库的不同表中，例如:用户数据存储到users 表中，图书数据存储到books表中。
+  每个表中具体存储哪些信息，由字段来决定，例如∶我们可以为users 表设计id、username、password这3个字段。
+  表中的行，代表每一条具体的数据。
+
+安装并配置MySQL
+  对于开发人员来说，只需要安装MySQL Server和MySQL Workbench这两个软件，就能满足开发的需要了。
+  MySQL Server:专门用来提供数据存储和服务的软件。
+  MysQL Workbench:可视化的MySQL管理工具，通过它，可以方便的操作存储在MySQL Server中的数据。
+
+MySQL字段的特殊标识
+  PK (Primary Key)主键、唯一标识
+  NN (Not Null)值不允许为空
+  UQ (Unique)值唯一
+  Al (Auto lncrement)值自动增长
+
+什么是SQL
+  SQL(英文全称: Structured Query Language)是结构化查询语言，专门用来访问和处理数据库的编程语言。能够让我们以编程的形式，操作数据库里面的数据。
+
+  三个关键点
+    SQL是一门数据库编程语言
+    使用SQL语言编写出来的代码，叫做SQL语句
+    SQL语言只能在关系型数据库中使用（例如MySQL、Oracle、SQL Server)。非关系型数据库（例如Mongodb)不支持SQL语言
+
+SQL关键字
+  SELECT
+    select 语句用于从表中查询数据.执行的结果被存储在一个结果表中(称为结果表).语法如下:
+      //从指定的表中,查询出所有数据
+      select * from 表名称
+
+      //从指定的表中,查询出指定的列名称数据
+      select 列名称 from 表名称
+
+      注意:SQL语句中的关键字对大小写不敏感.SElECT 等效于 select,FROM 等效于 from
+
+  INSERT INTO
+    INSERT INTO语句用于向数据表中插入新的数据行，语法格式如下:
+      insert into 表名(列1,列2...) value(值1,值2...)
+
+  UPDATE
+    update语句用于修改表中的数据.语法格式如下:
+      update 表名称 set 列名称 = 新值 where 列名称 = 值
+
+      把users表中id为7的用户密码，更新为888888。示例如下:
+      update users set password = "88888888" where id = 7
+
+      把users表中id为2的用户密码和用户状态，分别更新为admin123和1。示例如下:
+      update users set password = "admin123",status = 1 where id = 2
+
+  DELETE
+    DELETE语句用于删除表中的行。语法格式如下:
+      delete from 表名 where 列名 = 值
+
+  AND和OR
+    AND和OR可在 WHERE子语句中把两个或多个条件结合起来。
+    AND 表示必须同时满足多个条件，相当于JavaScript 中的&&运算符，例如if (a !== 10 && a !== 20)
+    OR表示只要满足任意一个条件即可，相当于JavaScript 中的Ⅱ运算符，例如 if(a !== 10||a !== 20)
+
+  ORDER BY
+    ORDER BY语句用于根据指定的列对结果集进行排序。
+    ORDER BY语句默认按照升序对记录进行排序。
+    如果您希望按照降序对记录进行排序，可以使用DESC 关键字。
+
+    对users表中的数据，按照status字段进行升序排序，示例如下:
+      SELECT * FROM users ORDER BY status;
+      SELECT * FROM users ORDER BY status ASC; //升序(默认)
+      SELECT * FROM users ORDER BY status DESC; //降序
+
+    多重排序
+      对users 表中的数据，先按照status 字段进行降序排序，再按照username的字母顺序，进行升序排序，示例如下:;
+        select * from user order by status desc, username asc
+
+    COUNT(*)
+      用于返回查询结果总数据条数,语法格式如下:
+        select count(*) from 表名称
+
+    AS
+      如果希望给查询出来的列名称设置别名，可以使用AS关键字，示例如下:
+        select username as uname from users where id = 1 这样查询出来的结果 "username" 就变成 "uname" 了
+
+在项目中操作MySQL
+  1.安装操作MySQL数据库的第三方模块(mysql)
+  2.通过mysql模块连接到MySQL数据库
+  3.通过mysql模块执行SQL语句
+
+安装mysql模块
+  npm i mysql
+
+配置mysql模块
+  在使用mysql模块操作MySQL数据库之前，必须先对 mysql模块进行必要的配置，主要的配置步骤如下;
+
+  const mysql = require("mysql")
+
+  const db = mysql.createPool({
+    host: '127.0.0.1',
+    user: 'root',
+    password: 'wxwjq147',
+    database: 'my_data'
+  })
+
+测试mysql模块是否正常工作
+  db.query('select 1', (err, result) => {
+    console.log(result)
+  })
+
+插入数据
+  const user = {username:"wang",password:"123"} //要插入的数据
+
+  const sqlStr = "INSERT INTO users (username,password) value(?,?)" //插入的格式,问号为占位符
+
+  db.query(sqlStr,[user.username,user.password], (err, result) => {
+    console.log(result)
+  })
+
+  注意:如果执行的是insert into插入语句，则results是一个对象
+  可以通过affectedRows属性，来判断是否插入数据成功,等于1表示插入成功
+
+  id具有唯一性,如果删除了对应id的数据,其他人就不能占用这个数据了
+
+  插入数据时,如果数据对象的每个属性和数据表的数据一一对应,则可以通过如下的方式快速插入数据
+    const user = {username:"wang",password:"123"} //要插入的数据
+
+    const sqlStr = "INSERT INTO users SET ?" //插入的格式,问号为占位符
+
+    db.query(sqlStr,users, (err, result) => {
+      console.log(result)
+    })
+
+更新数据
+  const user = {id:7,username:"aaa",password:"000"}
+
+  const sqlStr = "UPDATE users SET username = ? ,password = ? WHERE id = ?"
+
+  db.query(sqlStr,[user.username,user.password,user.id],(err,result) => {
+    if(err) return console.log(err.message)
+    if(results.affectedRows === 1){console.log("数据更新成功")}
+  })
+
+  便捷写法
+
+    const user = {id:7,username:"aaa",password:"000"}
+
+    const sqlStr = "UPDATE users SET ? WHERE id=?"
+
+    db.query(sqlStr,[user,user.id],(err,result) => {
+      if(err) return console.log(err.message)
+      if(results.affectedRows === 1){console.log("数据更新成功")}
+    })
+
+删除数据
+  const sqlStr = "DELETE FROM users WHERE ?"
+
+  db.query(sqlStr,7,(err,result)=>{
+    if(err) return console.log(err.message)
+    if(results.affectedRows === 1){console.log("数据删除成功")}
+  })
+
+标记删除
+  使用删除语句，会把真正的把数据从表中删除掉。为了保险起见，推荐使用标记删除的形式，来模拟删除的动作.
+
+  所谓的标记删除，就是在表中设置类似于Status这样的状态字段，来标记当前这条数据是否被删除.
+
+  当用户执行了删除的动作时，我们并没有执行DELETE语句把数据删除掉，而是执行了UPDATE语句，将这条数据对应的status字段标记为删除即可。
+
+  const sqlStr = "UPDATE users SET status = ? where id = ?"
+
+  db.query(sqlStr,[1,7],(err,result)=>{
+    if(err) return console.log(err.message)
+    if(results.affectedRows === 1){console.log("数据删除成功")}
+  })
+
+Web开发模式
+  目前主流的开发模式有两种,分别是:
+    1.基于服务端渲染的传统Web开发模式
+    2.基于前后端分离的新型Web开发模式
+
+服务端的Web开发模式
+  服务端渲染的概念:服务器发送给客户端的HTML页面，是在服务器通过字符串的拼接，动态生成的。
+  因此，客户端不需要使用Ajax这样的技术额外请求页面的数据。
+
+  优点:
+  前端耗时少。因为服务器端负责动态生成HTML内容，浏览器只需要直接渲染页面即可。尤其是移动端，更省电。
+  有利于SEO。因为服务器端响应的是完整的HTML页面内容，所以爬虫更容易爬取获得信息，更有利于SEO。
+
+  缺点:
+  占用服务器端资源。即服务器端完成HTML页面内容的拼接，如果请求较多，会对服务器造成一定的访问压力。
+  不利于前后端分离，开发效率低。使用服务器端渲染，则无法进行分工合作，尤其对于前端复杂度高的项目，不利于项目高效开发
+
+前后端分离的Web开发模式
+  前后端分离的概念:
+    前后端分离的开发模式，依赖于Ajax技术的广泛应用。简而言之，前后端分离的Web开发模式，就是后端只负责提供API接口，
+    前端使用Ajax调用接口的开发模式。
+
+  优点:
+    开发体验好。前端专注于UI页面的开发，后端专注于api的开发，且前端有更多的选择性。
+    用户体验好。Ajax技术的广泛应用，极大的提高了用户的体验，可以轻松实现页面的局部刷新
+    减轻了服务器端的渲染压力。因为页面最终是在每个用户的浏览器中生成的。
+
+  缺点:
+    不利于SEO。因为完整的HTML页面需要在客户端动态拼接完成，所以爬虫对无法爬取页面的有效信息。
+    (解决方案:利用Vue、React等前端框架的SSR (server side render）技术能够很好的解决SEO问题! )
+
+不同开发模式下的身份认证
+  对于服务端渲染和前后端分离这两种开发模式来说，分别有着不同的身份认证方案:
+    服务端渲染推荐使用Session 认证机制
+    前后端分离推荐使用JWT认证机制
+
+Cookie
+  Cookie是存储在用户浏览器中的一段不超过4KB的字符串。它由一个名称(Name)、一个值(Value)和其它几个用
+  于控制Cookie有效期、安全性、使用范围的可选属性组成。
+
+  不同域名下的Cookie各自独立，每当客户端发起请求时，会自动把当前域名下所有未过期的Cookie一同发送到服务器
+
+  Cookie的几大特性:
+    1.自动发送
+    2.域名独立
+    3.过期限制
+    4.4KB限制
+
+Cookie身份认证中的作用
+  客户端第一次请求服务器的时候，服务器通过响应头的形式，向客户端发送一个身份认证的Cookie，
+  客户端会自动将Cookie保存在浏览器中。
+
+  览器每次请求服务器的时候，浏览器会自动将身份认证相关的Cookie，通过请求头的形式发送给服务
+  器，服务器即可验明客户端的身份。
+
+Cookie不具有安全性
+  由于Cookie 是存储在浏览器中的，而且浏览器也提供了读写Cookie的API，因此Cookie很容易被伪造，不具有安全性。
+  因此不建议服务器将重要的隐私数据，通过Cookie的形式发送给浏览器。
+
+提高身份认证的安全性
+  
